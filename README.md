@@ -184,3 +184,4 @@ python3 -m sglang.launch_server --model "Qwen/Qwen3-32B" --tp 4 \
 
 - **[Detailed Features](./docs/features.md)**: Explore all available features and command-line arguments.
 - **[System Architecture](./docs/structures.md)**: Dive deep into the design and data flow of Mini-SGLang.
+- **[HiCache Development Roadmap](./docs/hicache-roadmap.md)** (中文): Staged implementation plan for hierarchical KV caching, with code integration points and acceptance criteria.
