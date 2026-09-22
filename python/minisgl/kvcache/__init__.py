@@ -18,7 +18,9 @@ from .base import (
 
 
 class CacheManagerCreator(Protocol):
-    def __call__(self, device: torch.device) -> BasePrefixCache: ...
+    def __call__(
+        self, device: torch.device, evict_policy: str = "lru"
+    ) -> BasePrefixCache: ...
 
 
 SUPPORTED_CACHE_MANAGER = Registry[CacheManagerCreator]("Cache Manager")
@@ -45,21 +47,26 @@ def create_kvcache_pool(
 
 
 @SUPPORTED_CACHE_MANAGER.register("naive")
-def create_naive_cache(device: torch.device):
+def create_naive_cache(device: torch.device, evict_policy: str = "lru"):
     from .naive_cache import NaivePrefixCache
+
+    assert evict_policy == "lru", "NaivePrefixCache actutally does not support "
+    "any eviction policy, but we only support lru passed."
 
     return NaivePrefixCache(device=device)
 
 
 @SUPPORTED_CACHE_MANAGER.register("radix")
-def create_radix_cache(device: torch.device):
+def create_radix_cache(device: torch.device, evict_policy: str = "lru"):
     from .radix_cache import RadixPrefixCache
 
-    return RadixPrefixCache(device=device)
+    return RadixPrefixCache(device=device, evict_policy=evict_policy)
 
 
-def create_prefix_cache(device: torch.device, type: str) -> BasePrefixCache:
-    return SUPPORTED_CACHE_MANAGER[type](device)
+def create_prefix_cache(
+    device: torch.device, type: str, evict_policy: str = "lru"
+) -> BasePrefixCache:
+    return SUPPORTED_CACHE_MANAGER[type](device, evict_policy=evict_policy)
 
 
 __all__ = [

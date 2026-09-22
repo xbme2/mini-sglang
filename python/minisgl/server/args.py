@@ -211,6 +211,14 @@ def parse_args(args: List[str], run_shell: bool = False) -> Tuple[ServerArgs, bo
     )
 
     parser.add_argument(
+        "--evict-policy",
+        type=str,
+        default=ServerArgs.evict_policy,
+        choices=["lru", "fifo", "lfu"],
+        help="The eviction policy for the KV cache.",
+    )
+
+    parser.add_argument(
         "--moe-backend",
         default=ServerArgs.moe_backend,
         choices=["auto"] + SUPPORTED_MOE_BACKENDS.supported_names(),

@@ -15,6 +15,10 @@ def _get_pid_suffix() -> str:
 class SchedulerConfig(EngineConfig):
     max_extend_tokens: int = 8192
     cache_type: str = "radix"
+
+    # evict_policy "lru" or "fifo" or "lfu"
+    evict_policy: str = "lru"
+
     offline_mode: bool = False
 
     # networking config

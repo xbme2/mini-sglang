@@ -13,12 +13,19 @@ if TYPE_CHECKING:
 
 
 class CacheManager:
-    def __init__(self, num_pages: int, page_size: int, page_table: torch.Tensor, type: str):
+    def __init__(
+        self,
+        num_pages: int,
+        page_size: int,
+        page_table: torch.Tensor,
+        type: str,
+        evict_policy: str = "lru",
+    ) -> None:
         # The `_free_slots` follows a page-aligned manner. For example, if page_size = 2,
         # the `_free_slots` may look like [0, 2, 4, 6, ...], and each slot represents a page.
         device = page_table.device
         self.free_slots = torch.arange(num_pages, dtype=torch.int32, device=device) * page_size
-        self.prefix_cache = create_prefix_cache(device=device, type=type)
+        self.prefix_cache = create_prefix_cache(device=device, type=type, evict_policy=evict_policy)
         self.device = device
         self.num_pages = num_pages
         self.page_table = page_table
